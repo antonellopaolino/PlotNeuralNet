@@ -13,7 +13,10 @@ def to_head( projectpath ):
 
 def to_cor():
     return r"""
+\def\InputColor{rgb:blue,2;green,2;black,0.1}
+\def\LatentSpaceColor{rgb:red,1;black,0.3}
 \def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\LinearColor{rgb:yellow,5;red,2.5;white,5}
 \def\ConvReluColor{rgb:yellow,5;red,5;white,5}
 \def\PoolColor{rgb:red,1;black,0.3}
 \def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
@@ -40,15 +43,122 @@ def to_input( pathfile, to='(-3,0,0)', width=8, height=8, name="temp" ):
 \node[canvas is zy plane at x=0] (""" + name + """) at """+ to +""" {\includegraphics[width="""+ str(width)+"cm"+""",height="""+ str(height)+"cm"+"""]{"""+ pathfile +"""}};
 """
 
-# Conv
-def to_Conv( name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
+# Input
+def to_InputLayer( name, w_label=256, h_label=256, d_label=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
     return r"""
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Box={
         name=""" + name +""",
         caption="""+ caption +r""",
-        xlabel={{"""+ str(n_filer) +""", }},
-        zlabel="""+ str(s_filer) +""",
+        xlabel={{"""+ str(w_label) +""", }},
+        ylabel="""+ str(h_label) +""",
+        zlabel="""+ str(d_label) +""",
+        fill=\InputColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
+
+# ConvRelu
+def to_ConvRelu( name, w_label=256, h_label=256, d_label=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {RightBandedBox={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(w_label) +""", }},
+        ylabel="""+ str(h_label) +""",
+        zlabel="""+ str(d_label) +""",
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
+
+# MaxPool
+def to_MaxPool( name, w_label=256, h_label=256, d_label=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(w_label) +""", }},
+        ylabel="""+ str(h_label) +""",
+        zlabel="""+ str(d_label) +""",
+        fill=\PoolColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
+
+# Linear
+def to_Linear( name, n_label=64, offset="(0,0,0)", to="(0,0,0)", height=40, width=1, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(n_label) +""", }},
+        fill=\LinearColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(0) +"""
+        }
+    };
+"""
+
+# Latent Space
+def to_Latent( name, n_label=64, offset="(0,0,0)", to="(0,0,0)", height=40, width=1, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(n_label) +""", }},
+        fill=\LatentSpaceColor,
+        opacity="""+ str(1) +""",
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(0) +"""
+        }
+    };
+"""
+
+# UpSample
+def to_UpSample( name, w_label=256, h_label=256, d_label=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(w_label) +""", }},
+        ylabel="""+ str(h_label) +""",
+        zlabel="""+ str(d_label) +r""",
+        fill=\UnpoolColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
+
+# Conv
+def to_Conv( name, w_label=256, h_label=256, d_label=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(w_label) +""", }},
+        ylabel="""+ str(h_label) +""",
+        zlabel="""+ str(d_label) +""",
         fill=\ConvColor,
         height="""+ str(height) +""",
         width="""+ str(width) +""",
